@@ -1,0 +1,50 @@
+﻿@{
+    ViewData["Title"] = "Admin Dashboard";
+    Layout = "_LayoutAdmin"; // You should create an admin layout
+}
+
+<div class="container mt-4">
+    <h2>Admin Dashboard</h2>
+    <div class="row">
+        <div class="col-md-3">
+            <div class="card text-white bg-primary mb-3">
+                <div class="card-header">Users</div>
+                <div class="card-body">
+                    <h5 class="card-title">Manage Users</h5>
+                    <p class="card-text">View and manage all system users</p>
+                    <a asp-action="Users" class="btn btn-light">Go to Users</a>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card text-white bg-success mb-3">
+                <div class="card-header">Doctors</div>
+                <div class="card-body">
+                    <h5 class="card-title">Doctor Stats</h5>
+                    <p class="card-text">@ViewBag.DoctorCount Doctors registered</p>
+                    <a asp-action="Users" asp-route-role="Doctor" class="btn btn-light">View Doctors</a>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card text-white bg-info mb-3">
+                <div class="card-header">Managers</div>
+                <div class="card-body">
+                    <h5 class="card-title">Manager Stats</h5>
+                    <p class="card-text">@ViewBag.ManagerCount Managers registered</p>
+                    <a asp-action="Users" asp-route-role="Manager" class="btn btn-light">View Managers</a>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card text-white bg-warning mb-3">
+                <div class="card-header">Patients</div>
+                <div class="card-body">
+                    <h5 class="card-title">Patient Stats</h5>
+                    <p class="card-text">@ViewBag.PatientCount Patients registered</p>
+                    <a asp-action="Users" asp-route-role="Patient" class="btn btn-light">View Patients</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

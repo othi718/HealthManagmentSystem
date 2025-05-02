@@ -1,0 +1,36 @@
+﻿@model List<HealthManagmentSystem.Models.Admin>
+
+
+@{
+    ViewData["Title"] = "Admin Dashboard";
+}
+
+<h2>Admin Dashboard</h2>
+
+<a class="btn btn-success mb-3" asp-action="AddUser">Add User</a>
+
+<table class="table table-bordered">
+    <thead>
+        <tr>
+            <th>Name</th>
+            <th>Email</th>
+            <th>Role</th>
+            <th>Action</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var user in Model)
+        {
+            <tr>
+                <td>@user.Name</td>
+                <td>@user.Email</td>
+                <td>@user.Role</td>
+                <td>
+                    <form asp-action="DeleteUser" method="post" asp-route-id="@user.Id" onsubmit="return confirm('Are you sure?');">
+                        <button type="submit" class="btn btn-danger btn-sm">Delete</button>
+                    </form>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

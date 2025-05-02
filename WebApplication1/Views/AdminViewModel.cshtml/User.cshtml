@@ -1,0 +1,55 @@
+﻿@model HealthManagmentSystem.Models.AdminUsersViewModel
+@{
+    ViewData["Title"] = "Manage Users";
+    Layout = "_LayoutAdmin";
+}
+
+<div class="container mt-4">
+    <h2>Manage Users</h2>
+    <div class="mb-3">
+        <a asp-action="AddUser" class="btn btn-primary">Add New User</a>
+    </div>
+
+    <h4>Admins</h4>
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Email</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var admin in Model.Admins)
+            {
+                <tr>
+                    <td>@admin.Name</td>
+                    <td>@admin.Email</td>
+                    <td>
+                        <form asp-action="DeleteUser" method="post" onsubmit="return confirm('Are you sure?');">
+                            <input type="hidden" name="email" value="@admin.Email" />
+                            <input type="hidden" name="role" value="Admin" />
+                            <button type="submit" class="btn btn-danger btn-sm">Delete</button>
+                        </form>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+
+    <!-- Repeat similar tables for Doctors, Managers, Patients -->
+    <h4>Doctors</h4>
+    <table class="table table-striped">
+        <!-- Doctor table content -->
+    </table>
+
+    <h4>Managers</h4>
+    <table class="table table-striped">
+        <!-- Manager table content -->
+    </table>
+
+    <h4>Patients</h4>
+    <table class="table table-striped">
+        <!-- Patient table content -->
+    </table>
+</div>
