@@ -10,10 +10,11 @@ namespace HealthManagmentSystem.Models
         public decimal? ID { get; set; }
 
         [Required]
-        public string? Email { get; set; }
+        public string Email { get; set; } = string.Empty;
 
         [Required]
         public string? PasswordHash { get; set; }
-        
+        public string Role { get; set; } = "Patient"; // Default value
+
     }
 }

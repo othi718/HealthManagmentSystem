@@ -67,4 +67,8 @@
     </Content>
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Views\Doctor\" />
+  </ItemGroup>
+
 </Project>

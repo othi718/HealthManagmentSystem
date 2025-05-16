@@ -12,7 +12,11 @@ public class AdminController : Controller
     {
         _context = context;
     }
-
+    public IActionResult Index()
+    {
+        return View();  // returns Views/Admin/Index.cshtml
+    }
+    
     public async Task<IActionResult> Users()
     {
         var model = new AdminUsersViewModel
@@ -24,6 +28,8 @@ public class AdminController : Controller
         };
         return View(model);
     }
+   
+
 
     public IActionResult AddUser()
     {
@@ -99,7 +105,7 @@ public class AdminController : Controller
             });
 
             await _context.SaveChangesAsync();
-            return RedirectToAction("Users");
+            return RedirectToAction("AdminDashbroad");
         }
         return View(model);
     }
@@ -156,4 +162,5 @@ public class AdminController : Controller
         await _context.SaveChangesAsync();
         return RedirectToAction("Users");
     }
+
 }

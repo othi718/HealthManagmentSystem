@@ -10,8 +10,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace HealthManagmentSystem.Migrations
 {
     [DbContext(typeof(HealthDbContext))]
-    [Migration("20250424075845_Login")]
-    partial class Login
+    [Migration("20250515132346_Final")]
+    partial class Final
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -52,28 +52,31 @@ namespace HealthManagmentSystem.Migrations
                     b.ToTable("Admin");
                 });
 
-            modelBuilder.Entity("HealthManagmentSystem.Models.Login", b =>
+            modelBuilder.Entity("HealthManagmentSystem.Models.Doctor", b =>
                 {
+                    b.Property<decimal>("ID")
+                        .HasColumnType("decimal(18,2)");
+
                     b.Property<string>("Email")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<string>("Password")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("Role")
+                    b.Property<string>("Name")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("PasswordHash")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.HasKey("Email");
+                    b.HasKey("ID");
 
-                    b.ToTable("Login");
+                    b.ToTable("Doctor");
                 });
 
             modelBuilder.Entity("HealthManagmentSystem.Models.Manager", b =>
                 {
                     b.Property<decimal>("ID")
-                        .HasColumnType("decimal(18,2)");
+                        .HasColumnType("decimal(18,0)");
 
                     b.Property<string>("Email")
                         .IsRequired()
@@ -94,7 +97,7 @@ namespace HealthManagmentSystem.Migrations
             modelBuilder.Entity("HealthManagmentSystem.Models.Patient", b =>
                 {
                     b.Property<decimal>("ID")
-                        .HasColumnType("decimal(18,2)");
+                        .HasColumnType("decimal(18,0)");
 
                     b.Property<string>("Email")
                         .IsRequired()
@@ -115,20 +118,50 @@ namespace HealthManagmentSystem.Migrations
             modelBuilder.Entity("HealthManagmentSystem.Models.Registration", b =>
                 {
                     b.Property<string>("Email")
-                        .HasColumnType("nvarchar(450)");
+                        .HasMaxLength(256)
+                        .HasColumnType("nvarchar(256)");
 
                     b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.Property<string>("Password")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("PasswordHash")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Role")
-                        .HasColumnType("nvarchar(max)");
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
 
                     b.HasKey("Email");
 
                     b.ToTable("Registration");
+                });
+
+            modelBuilder.Entity("Login", b =>
+                {
+                    b.Property<string>("Email")
+                        .HasMaxLength(256)
+                        .HasColumnType("nvarchar(256)");
+
+                    b.Property<string>("PasswordHash")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Role")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
+
+                    b.HasKey("Email");
+
+                    b.ToTable("Login");
                 });
 #pragma warning restore 612, 618
         }

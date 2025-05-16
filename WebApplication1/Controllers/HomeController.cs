@@ -118,13 +118,13 @@ namespace HealthManagmentSystem.Controllers
                     switch (user.Role)
                     {
                         case "Admin":
-                            return RedirectToAction("Dashboard", "Admin");
+                            return RedirectToAction("Index", "Admin");
                         case "Manager":
-                            return RedirectToAction("Dashboard", "Manager");
+                            return RedirectToAction("Index", "Manager");
                         case "Doctor":
                             return RedirectToAction("Dashboard", "Doctor");
                         case "Patient":
-                            return RedirectToAction("Dashboard", "Patient");
+                            return RedirectToAction("Index", "Patient");
                         default:
                             return RedirectToAction("Index");
                     }

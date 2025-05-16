@@ -1,0 +1,45 @@
+﻿@{
+    ViewData["Title"] = "Manager Dashboard";
+    Layout = "LayoutManager";
+}
+
+<div class="container mt-4">
+    <h2>Manager Dashboard</h2>
+    <div class="row">
+
+        <div class="col-md-4">
+            <div class="card text-white bg-success mb-3">
+                <div class="card-header">Doctors</div>
+                <div class="card-body">
+                    <h5 class="card-title">Doctor Management</h5>
+                    <p class="card-text">@ViewBag.DoctorCount doctors registered</p>
+                    <a asp-action="Doctors" class="btn btn-light">Manage Doctors</a>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="card text-white bg-warning mb-3">
+                <div class="card-header">Patients</div>
+                <div class="card-body">
+                    <h5 class="card-title">Patient Management</h5>
+                    <p class="card-text">@ViewBag.PatientCount patients registered</p>
+                    <a asp-action="Patients" class="btn btn-light">Manage Patients</a>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="card text-white bg-primary mb-3">
+                <div class="card-header">My Profile</div>
+                <div class="card-body">
+                    <h5 class="card-title">View or Edit Manager Info</h5>
+                    <p class="card-text">Logged in as Manager</p>
+                    <a asp-action="Profile" class="btn btn-light">View Profile</a>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+
