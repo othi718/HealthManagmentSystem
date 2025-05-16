@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using HealthManagmentSystem.Models;
 using Microsoft.AspNetCore.Authorization;
+using HealthManagmentSystem.Models.ViewModel;
 
 [Authorize(Roles = "Admin")]
 public class AdminController : Controller
@@ -12,14 +13,15 @@ public class AdminController : Controller
     {
         _context = context;
     }
+
     public IActionResult Index()
     {
         return View();  // returns Views/Admin/Index.cshtml
-    }
-    
+    } // <-- Missing closing brace added here
+
     public async Task<IActionResult> Users()
     {
-        var model = new AdminUsersViewModel
+        var model = new AdminUserViewModel
         {
             Admins = await _context.Admin.ToListAsync(),
             Doctors = await _context.Doctor.ToListAsync(),
@@ -28,8 +30,6 @@ public class AdminController : Controller
         };
         return View(model);
     }
-   
-
 
     public IActionResult AddUser()
     {
@@ -105,7 +105,7 @@ public class AdminController : Controller
             });
 
             await _context.SaveChangesAsync();
-            return RedirectToAction("AdminDashbroad");
+            return RedirectToAction("Users");
         }
         return View(model);
     }
@@ -162,5 +162,4 @@ public class AdminController : Controller
         await _context.SaveChangesAsync();
         return RedirectToAction("Users");
     }
-
 }

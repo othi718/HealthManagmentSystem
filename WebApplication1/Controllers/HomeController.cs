@@ -122,7 +122,7 @@ namespace HealthManagmentSystem.Controllers
                         case "Manager":
                             return RedirectToAction("Index", "Manager");
                         case "Doctor":
-                            return RedirectToAction("Dashboard", "Doctor");
+                            return RedirectToAction("Index", "Doctor");
                         case "Patient":
                             return RedirectToAction("Index", "Patient");
                         default:

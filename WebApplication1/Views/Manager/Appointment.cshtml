@@ -1,0 +1,152 @@
+﻿@model IEnumerable<HealthManagmentSystem.Models.Appointment>
+@{
+    ViewData["Title"] = "Manage Appointments";
+    Layout = "LayoutManager";
+}
+
+<div class="container mt-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2>Appointment Management</h2>
+        <a asp-action="CreateAppointment" class="btn btn-primary">
+            <i class="fas fa-plus-circle"></i> Create New Appointment
+        </a>
+    </div>
+
+    <!-- Filter Section -->
+    <div class="card mb-4">
+        <div class="card-body">
+            <form method="get" class="row g-3">
+                <div class="col-md-4">
+                    <label class="form-label">Doctor</label>
+                    <select name="doctorId" class="form-select" asp-items="ViewBag.Doctors">
+                        <option value="">All Doctors</option>
+                    </select>
+                </div>
+                <div class="col-md-4">
+                    <label class="form-label">Patient</label>
+                    <select name="patientId" class="form-select" asp-items="ViewBag.Patients">
+                        <option value="">All Patients</option>
+                    </select>
+                </div>
+                <div class="col-md-2">
+                    <label class="form-label">From Date</label>
+                    <input type="date" name="startDate" class="form-control" />
+                </div>
+                <div class="col-md-2">
+                    <label class="form-label">To Date</label>
+                    <input type="date" name="endDate" class="form-control" />
+                </div>
+                <div class="col-md-4">
+                    <label class="form-label">Status</label>
+                    <select name="status" class="form-select">
+                        <option value="">All Statuses</option>
+                        <option value="Scheduled">Scheduled</option>
+                        <option value="Completed">Completed</option>
+                        <option value="Cancelled">Cancelled</option>
+                    </select>
+                </div>
+                <div class="col-12">
+                    <button type="submit" class="btn btn-info">
+                        <i class="fas fa-filter"></i> Filter
+                    </button>
+                    <a asp-action="Appointment" class="btn btn-outline-secondary ms-2">Reset</a>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Appointments Table -->
+    <div class="card">
+        <div class="card-body">
+            @if (Model.Any())
+            {
+                <div class="table-responsive">
+                    <table class="table table-hover">
+                        <thead class="table-light">
+                            <tr>
+                                <th>ID</th>
+                                <th>Patient</th>
+                                <th>Doctor</th>
+                                <th>Date & Time</th>
+                                <th>Status</th>
+                                <th>Reason</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var appointment in Model)
+                            {
+                                <tr>
+                                    <td>@appointment.AppointmentId</td>
+                                    <td>@appointment.Patient?.Name</td>
+                                    
+                                    <td>@appointment.AppointmentDate.ToString("f")</td>
+                                    <td>
+                                        <span class="badge @GetStatusBadgeClass(appointment.Status)">
+                                            @appointment.Status
+                                        </span>
+                                    </td>
+                                    <td>@appointment.Reason</td>
+                                    <td>
+                                        <div class="btn-group btn-group-sm">
+                                            @if (appointment.Status == "Scheduled")
+                                            {
+                                                <a asp-action="EditAppointment" asp-route-id="@appointment.AppointmentId"
+                                                   class="btn btn-outline-primary" title="Edit">
+                                                    <i class="fas fa-edit"></i>
+                                                </a>
+                                                <form asp-action="CancelAppointment" method="post"
+                                                      onsubmit="return confirm('Are you sure you want to cancel this appointment?');">
+                                                    <input type="hidden" name="id" value="@appointment.AppointmentId" />
+                                                    <button type="submit" class="btn btn-outline-danger" title="Cancel">
+                                                        <i class="fas fa-times-circle"></i>
+                                                    </button>
+                                                </form>
+                                            }
+                                            <a asp-action="AppointmentDetails" asp-route-id="@appointment.AppointmentId"
+                                               class="btn btn-outline-info" title="Details">
+                                                <i class="fas fa-info-circle"></i>
+                                            </a>
+                                        </div>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            }
+            else
+            {
+                <div class="alert alert-info">No appointments found matching your criteria</div>
+            }
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        // Initialize date pickers with default ranges
+        document.addEventListener('DOMContentLoaded', function() {
+            const today = new Date().toISOString().split('T')[0];
+            const oneMonthLater = new Date();
+            oneMonthLater.setMonth(oneMonthLater.getMonth() + 1);
+            const futureDate = oneMonthLater.toISOString().split('T')[0];
+
+            document.querySelector('input[name="startDate"]').value = today;
+            document.querySelector('input[name="endDate"]').value = futureDate;
+        });
+    </script>
+}
+
+@functions {
+    public string GetStatusBadgeClass(string status)
+    {
+        return status switch
+        {
+            "Scheduled" => "bg-primary",
+            "Completed" => "bg-success",
+            "Cancelled" => "bg-secondary",
+            _ => "bg-info"
+        };
+    }
+}
