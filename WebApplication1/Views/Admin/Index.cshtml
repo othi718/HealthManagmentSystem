@@ -1,32 +1,77 @@
 ﻿@{
     ViewData["Title"] = "Admin Dashboard";
-    Layout = "LayoutAdmin"; // You should create an admin layout
+    Layout = "LayoutAdmin";
 }
 
-<div class="container mt-4">
-    <h2>Admin Dashboard</h2>
-    <div class="row">
-        <div class="col-md-3">
-            <div class="card text-white bg-primary mb-3">
-                <div class="card-header">Users</div>
-                <div class="card-body">
-                    <h5 class="card-title">Manage Users</h5>
-                    <p class="card-text"> Manage all system users</p>
-                    <a asp-action="AddUser" class="btn btn-light">Go to Users</a>
-                </div>
-            </div>
-        </div>
-        
+<style>
+    .dashboard-card {
+        min-height: 250px;
+        border: 1px solid #ddd;
+        box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+        transition: transform 0.2s ease-in-out;
+    }
+
+        .dashboard-card:hover {
+            transform: scale(1.02);
+        }
+
+    .bg-light-blue {
+        background-color: #e0f7fa; /* Light blue */
+        color: #007b8a;
+    }
+
+    .bg-light-cyan {
+        background-color: #e3f2fd; /* Light cyan-blue */
+        color: #01579b;
+    }
+
+    .dashboard-title {
+        font-size: 1.25rem;
+        font-weight: 600;
+    }
+
+    .dashboard-text {
+        font-size: 0.95rem;
+    }
+
+    .card-body {
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+    }
+</style>
+
+<div class="container mt-5">
+    <h2 class="mb-4 text-center">Admin Dashboard</h2>
+    <div class="row g-4">
+
+        <!-- Manage Users -->
         <div class="col-md-4">
-            <div class="card text-white bg-info mb-3">
-                <div class="card-header">Managers</div>
+            <div class="card dashboard-card bg-light-blue">
+                <div class="card-header bg-transparent border-0 dashboard-title">Users</div>
                 <div class="card-body">
-                   
-                    <p class="card-text">@ViewBag.ManagerCount Managers registered</p>
-                    <a asp-action="Users"  class="btn btn-light">View Users</a>
+                    <div>
+                        <h5 class="card-title">Manage System Users</h5>
+                        <p class="dashboard-text">Add or manage all users across the system.</p>
+                    </div>
+                    <a asp-action="AddUser" class="btn btn-outline-primary mt-3">Go to Users</a>
                 </div>
             </div>
         </div>
-      
+
+        <!-- View Managers -->
+        <div class="col-md-4">
+            <div class="card dashboard-card bg-light-cyan">
+                <div class="card-header bg-transparent border-0 dashboard-title">Managers</div>
+                <div class="card-body">
+                    <div>
+                        <h5 class="card-title">Manager Overview</h5>
+                        <p class="dashboard-text">@ViewBag.ManagerCount managers registered.</p>
+                    </div>
+                    <a asp-action="Users" class="btn btn-outline-info mt-3">View Users</a>
+                </div>
+            </div>
+        </div>
+
     </div>
 </div>

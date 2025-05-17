@@ -1,8 +1,10 @@
 ﻿using HealthManagmentSystem.Models;
+using HealthManagmentSystem.Models.ViewModel;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.Threading.Tasks;
 using System.Linq;
+using System;
 
 namespace HealthManagmentSystem.Controllers
 {
@@ -15,28 +17,68 @@ namespace HealthManagmentSystem.Controllers
             _context = context;
         }
 
-        public async Task<IActionResult> Index()
+        // ✅ Dashboard after login
+        public IActionResult Index()
+        {
+            return View(); // This will load Views/Patient/Index.cshtml (Dashboard view)
+        }
+
+        // ✅ View Doctor List
+        public async Task<IActionResult> DoctorList()
+        {
+            var doctors = await _context.Doctor
+                .Where(d => d.Role == "Doctor")
+                .ToListAsync();
+
+            return View(doctors); // Make sure Views/Patient/DoctorList.cshtml exists
+        }
+
+        // ✅ View Medical Records
+        public async Task<IActionResult> MedicalRecords()
         {
             decimal patientId = GetLoggedInPatientId();
 
-            var doctors = await _context.Doctor.ToListAsync();
+            var records = await _context.MedicalRecord
+                .Include(r => r.Doctor)
+                .Where(r => r.PatientId == patientId)
+                .ToListAsync();
+
+            return View(records); // Make sure Views/Patient/MedicalRecords.cshtml exists
+        }
+
+        // ✅ Appointment Dashboard (booking + history)
+        public async Task<IActionResult> Appointment()
+        {
+            decimal patientId = GetLoggedInPatientId();
+
+            var doctors = await _context.Doctor
+                .Where(d => d.Role == "Doctor")
+                .ToListAsync();
 
             var appointments = await _context.Appointment
                 .Include(a => a.Doctor)
                 .Where(a => a.PatientId == patientId)
                 .ToListAsync();
 
-            var model = new PatientIndexViewModel
+            var medicalRecords = await _context.MedicalRecord
+                .Include(r => r.Doctor)
+                .Where(r => r.PatientId == patientId)
+                .ToListAsync();
+
+            var model = new PatientAppointmentViewModel
             {
                 Doctors = doctors,
+                Appointment = new Appointment { AppointmentDate = DateTime.Now.AddDays(1) },
                 Appointments = appointments,
-                NewAppointment = new Appointment { AppointmentDate = DateTime.Now.AddDays(1) }
+                MedicalRecords = medicalRecords
             };
 
-            return View(model);
+            return View(model); // Views/Patient/Appointment.cshtml
         }
 
+        // ✅ Make appointment
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public async Task<IActionResult> MakeAppointment(Appointment appointment)
         {
             if (ModelState.IsValid)
@@ -46,47 +88,55 @@ namespace HealthManagmentSystem.Controllers
 
                 _context.Appointment.Add(appointment);
                 await _context.SaveChangesAsync();
-                return RedirectToAction("Index");
+
+                return RedirectToAction("Appointment");
             }
-            // If invalid, reload Index view with data
-            var doctors = await _context.Doctor.ToListAsync();
-            var appointments = await _context.Appointment
-                .Include(a => a.Doctor)
-                .Where(a => a.PatientId == GetLoggedInPatientId())
+
+            decimal patientId = GetLoggedInPatientId();
+
+            // Reload form with model data
+            var doctors = await _context.Doctor
+                .Where(d => d.Role == "Doctor")
                 .ToListAsync();
 
-            var model = new PatientIndexViewModel
+            var appointments = await _context.Appointment
+                .Include(a => a.Doctor)
+                .Where(a => a.PatientId == patientId)
+                .ToListAsync();
+
+            var medicalRecords = await _context.MedicalRecord
+                .Include(r => r.Doctor)
+                .Where(r => r.PatientId == patientId)
+                .ToListAsync();
+
+            var model = new PatientAppointmentViewModel
             {
                 Doctors = doctors,
+                Appointment = appointment,
                 Appointments = appointments,
-                NewAppointment = appointment
+                MedicalRecords = medicalRecords
             };
-            return View("Index", model);
+
+            return View("Appointment", model);
         }
 
+        // ✅ Cancel appointment
         public async Task<IActionResult> CancelAppointment(int id)
         {
             var appointment = await _context.Appointment.FindAsync(id);
-            if (appointment != null)
+            if (appointment != null && appointment.PatientId == GetLoggedInPatientId())
             {
                 appointment.Status = "Cancelled";
                 await _context.SaveChangesAsync();
             }
-            return RedirectToAction("Index");
+
+            return RedirectToAction("Appointment");
         }
 
+        // Simulated logged-in patient ID
         private decimal GetLoggedInPatientId()
         {
-            // TODO: Replace with real logged-in patient ID retrieval logic
-            return 1;
+            return 1; // Replace with real user ID from login/session
         }
-    }
-
-    // ViewModel to hold data for Index view
-    public class PatientIndexViewModel
-    {
-        public List<Doctor> Doctors { get; set; } = new();
-        public List<Appointment> Appointments { get; set; } = new();
-        public Appointment NewAppointment { get; set; } = new();
     }
 }

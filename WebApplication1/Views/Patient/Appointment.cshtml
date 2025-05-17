@@ -1,0 +1,40 @@
+﻿@model HealthManagmentSystem.Models.ViewModel.PatientAppointmentViewModel
+
+<div class="container mt-5">
+    <div class="card shadow-lg rounded-4">
+        <div class="card-header bg-primary text-white text-center rounded-top-4">
+            <h4 class="mb-0">Book an Appointment</h4>
+        </div>
+        <div class="card-body p-4">
+
+            <form asp-action="MakeAppointment" method="post">
+
+                <div class="mb-3">
+                    <label asp-for="Appointment.DoctorId" class="form-label">Select Doctor</label>
+                    <select asp-for="Appointment.DoctorId" class="form-select"
+                            asp-items="@(new SelectList(Model.Doctors, "ID", "Name"))">
+                        <option value="">-- Select Doctor --</option>
+                    </select>
+                    <span asp-validation-for="Appointment.DoctorId" class="text-danger small"></span>
+                </div>
+
+                <div class="mb-3">
+                    <label asp-for="Appointment.AppointmentDate" class="form-label">Appointment Date & Time</label>
+                    <input asp-for="Appointment.AppointmentDate" type="datetime-local" class="form-control" />
+                    <span asp-validation-for="Appointment.AppointmentDate" class="text-danger small"></span>
+                </div>
+
+                <div class="mb-3">
+                    <label asp-for="Appointment.Reason" class="form-label">Reason</label>
+                    <textarea asp-for="Appointment.Reason" class="form-control" rows="3" placeholder="Describe your symptoms or reason for visit"></textarea>
+                    <span asp-validation-for="Appointment.Reason" class="text-danger small"></span>
+                </div>
+
+                <div class="d-grid">
+                    <button type="submit" class="btn btn-success btn-lg">Confirm Appointment</button>
+                </div>
+
+            </form>
+        </div>
+    </div>
+</div>

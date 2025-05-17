@@ -1,0 +1,49 @@
+﻿@model Registration
+
+@{
+    ViewData["Title"] = "Add Doctor or Patient";
+    Layout = "LayoutManager"; // Ensure you're using the Manager layout
+}
+
+<div class="container mt-4">
+    <h2 class="mb-4">Add New Doctor or Patient</h2>
+
+    <form asp-action="AddUser" method="post">
+        <div class="form-group mb-3">
+            <label asp-for="Name" class="form-label"></label>
+            <input asp-for="Name" class="form-control" />
+            <span asp-validation-for="Name" class="text-danger"></span>
+        </div>
+
+        <div class="form-group mb-3">
+            <label asp-for="Email" class="form-label"></label>
+            <input asp-for="Email" class="form-control" />
+            <span asp-validation-for="Email" class="text-danger"></span>
+        </div>
+
+        <div class="form-group mb-3">
+            <label asp-for="Password" class="form-label"></label>
+            <input asp-for="Password" type="password" class="form-control" />
+            <span asp-validation-for="Password" class="text-danger"></span>
+        </div>
+
+        <div class="form-group mb-4">
+            <label asp-for="Role" class="form-label">Select Role (Doctor or Patient)</label>
+            <select asp-for="Role" class="form-control">
+                <option value="">-- Select Role --</option>
+                <option value="Doctor">Doctor</option>
+                <option value="Patient">Patient</option>
+            </select>
+            <span asp-validation-for="Role" class="text-danger"></span>
+        </div>
+
+        <div class="d-flex gap-2">
+            <button type="submit" class="btn btn-success">Add User</button>
+            <a asp-action="Users" class="btn btn-outline-secondary">Cancel</a>
+        </div>
+    </form>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

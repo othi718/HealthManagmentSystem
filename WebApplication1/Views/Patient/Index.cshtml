@@ -1,83 +1,96 @@
-﻿@model HealthManagmentSystem.Controllers.PatientIndexViewModel
-@{
-    Layout = "LayoutPatient";
+﻿@{
     ViewData["Title"] = "Patient Dashboard";
+    Layout = "LayoutPatient";
 }
 
-<h2>Doctors</h2>
-<table class="table">
-    <thead>
-        <tr><th>Name</th><th>Email</th><th>Make Appointment</th></tr>
-    </thead>
-    <tbody>
-        @foreach (var doctor in Model.Doctors)
-        {
-            <tr>
-                <td>@doctor.Name</td>
-                <td>@doctor.Email</td>
-                <td>
-                    <form asp-action="MakeAppointment" method="post" style="display:inline-block;">
-                        <input type="hidden" asp-for="NewAppointment.AppointmentDate" value="@Model.NewAppointment.AppointmentDate.ToString("yyyy-MM-ddTHH:mm")" />
-                        <input type="hidden" name="DoctorId" value="@doctor.ID" />
-                        <input type="hidden" name="Reason" value="@Model.NewAppointment.Reason" />
-                        <button type="submit" class="btn btn-primary btn-sm">Make Appointment</button>
-                    </form>
-                </td>
-            </tr>
-        }
-    </tbody>
-</table>
-
-<h2>Make Appointment</h2>
-<form asp-action="MakeAppointment" method="post">
-    <div class="form-group">
-        <label>Choose Doctor</label>
-        <select asp-for="NewAppointment.DoctorId" class="form-control" asp-items="@(new SelectList(Model.Doctors, "ID", "Name"))"></select>
-    </div>
-    <div class="form-group">
-        <label asp-for="NewAppointment.AppointmentDate"></label>
-        <input asp-for="NewAppointment.AppointmentDate" type="datetime-local" class="form-control" />
-        <span asp-validation-for="NewAppointment.AppointmentDate" class="text-danger"></span>
-    </div>
-    <div class="form-group">
-        <label asp-for="NewAppointment.Reason"></label>
-        <textarea asp-for="NewAppointment.Reason" class="form-control"></textarea>
-        <span asp-validation-for="NewAppointment.Reason" class="text-danger"></span>
-    </div>
-    <button type="submit" class="btn btn-success">Schedule Appointment</button>
-</form>
-
-<h2>My Appointments</h2>
-<table class="table">
-    <thead>
-        <tr><th>Doctor</th><th>Date</th><th>Reason</th><th>Status</th><th>Action</th></tr>
-    </thead>
-    <tbody>
-        @foreach (var appointment in Model.Appointments)
-        {
-            <tr>
-                <td>@appointment.Doctor?.Name</td>
-                <td>@appointment.AppointmentDate.ToString("g")</td>
-                <td>@appointment.Reason</td>
-                <td>@appointment.Status</td>
-                <td>
-                    @if (appointment.Status == "Scheduled")
-                    {
-                        <a asp-action="CancelAppointment" asp-route-id="@appointment.AppointmentId"
-                           onclick="return confirm('Cancel this appointment?');" class="btn btn-danger btn-sm">Cancel</a>
-                    }
-                    else
-                    {
-                        <span>-</span>
-                    }
-                </td>
-            </tr>
-        }
-    </tbody>
-</table>
-
-@section Scripts {
-    @{
-        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+<style>
+    .dashboard-card {
+        min-height: 250px;
+        border: 1px solid #ddd;
+        box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+        transition: transform 0.2s ease-in-out;
     }
-}
+
+        .dashboard-card:hover {
+            transform: scale(1.02);
+        }
+
+    .bg-light-blue {
+        background-color: #e0f7fa; /* Light blue */
+        color: #007b8a;
+    }
+
+    .bg-light-green {
+        background-color: #e6f4ea; /* Light green */
+        color: #2e7d32;
+    }
+
+    .bg-coral-blue {
+        background-color: #d0f0f7; /* Soft coral-aqua blue */
+        color: #005f73;
+    }
+
+    .dashboard-title {
+        font-size: 1.25rem;
+        font-weight: 600;
+    }
+
+    .dashboard-text {
+        font-size: 0.95rem;
+    }
+
+    .card-body {
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+    }
+</style>
+
+<div class="container mt-5">
+    <h2 class="mb-4 text-center">Welcome to Your Patient Dashboard</h2>
+    <div class="row g-4">
+
+        <!-- Appointment -->
+        <div class="col-md-4">
+            <div class="card dashboard-card bg-light-blue">
+                <div class="card-header bg-transparent border-0 dashboard-title">Appointments</div>
+                <div class="card-body">
+                    <div>
+                        <h5 class="card-title">Book a New Appointment</h5>
+                        <p class="dashboard-text">Schedule a visit with your doctor.</p>
+                    </div>
+                    <a asp-action="Appointment" class="btn btn-outline-primary mt-3">Make Appointment</a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Doctor List -->
+        <div class="col-md-4">
+            <div class="card dashboard-card bg-light-green">
+                <div class="card-header bg-transparent border-0 dashboard-title">Doctor Directory</div>
+                <div class="card-body">
+                    <div>
+                        <h5 class="card-title">Find Doctors</h5>
+                        <p class="dashboard-text">Search and view available doctors.</p>
+                    </div>
+                    <a asp-action="DoctorList" class="btn btn-outline-success mt-3">View Doctors</a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Medical Records -->
+        <div class="col-md-4">
+            <div class="card dashboard-card bg-coral-blue">
+                <div class="card-header bg-transparent border-0 dashboard-title">Medical Records</div>
+                <div class="card-body">
+                    <div>
+                        <h5 class="card-title">View Past Reports</h5>
+                        <p class="dashboard-text">Access your medical history and prescriptions.</p>
+                    </div>
+                    <a asp-action="MedicalRecords" class="btn btn-outline-info mt-3">View Records</a>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>

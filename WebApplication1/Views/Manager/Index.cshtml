@@ -3,43 +3,94 @@
     Layout = "LayoutManager";
 }
 
-<div class="container mt-4">
-    <h2>Manager Dashboard</h2>
-    <div class="row">
+<style>
+    .dashboard-card {
+        min-height: 250px;
+        border: 1px solid #ddd;
+        box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+        transition: transform 0.2s ease-in-out;
+    }
 
+        .dashboard-card:hover {
+            transform: scale(1.02);
+        }
+
+    .bg-light-green {
+        background-color: #e6f4ea; /* Light green */
+        color: #2e7d32;
+    }
+
+    .bg-light-yellow {
+        background-color: #fff9e6; /* Pale yellow */
+        color: #8a6d1d;
+    }
+
+    .bg-coral-blue {
+        background-color: #d0f0f7; /* Coral-aqua blue */
+        color: #005f73;
+    }
+
+    .dashboard-title {
+        font-size: 1.25rem;
+        font-weight: 600;
+    }
+
+    .dashboard-text {
+        font-size: 0.95rem;
+    }
+
+    .card-body {
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+    }
+</style>
+
+<div class="container mt-5">
+    <h2 class="mb-4 text-center">Manager Dashboard</h2>
+    <div class="row g-4">
+
+        <!-- Manage Users -->
         <div class="col-md-4">
-            <div class="card text-white bg-success mb-3">
-                <div class="card-header">Manage Doctor and Patient</div>
+            <div class="card dashboard-card bg-light-green">
+                <div class="card-header bg-transparent border-0 dashboard-title">Manage Doctors & Patients</div>
                 <div class="card-body">
-                    
-                  
-                    <a asp-action="Users" class="btn btn-light">Manage Users</a>
+                    <div>
+                        <h5 class="card-title">User Management</h5>
+                        <p class="dashboard-text">Add, remove, or edit doctors and patients.</p>
+                    </div>
+                    <a asp-action="Users" class="btn btn-outline-success mt-3">Manage Users</a>
                 </div>
             </div>
         </div>
 
+        <!-- Manage Appointments -->
         <div class="col-md-4">
-            <div class="card text-white bg-warning mb-3">
-                <div class="card-header"> Appointments</div>
+            <div class="card dashboard-card bg-light-yellow">
+                <div class="card-header bg-transparent border-0 dashboard-title">Appointments</div>
                 <div class="card-body">
-   
-                   
-                    <a asp-action="Appointment" class="btn btn-light">Manage Appointments</a>
+                    <div>
+                        <h5 class="card-title">Manage Appointments</h5>
+                        <p class="dashboard-text">View and control scheduled appointments.</p>
+                    </div>
+                    <a asp-action="Appointment" class="btn btn-outline-warning mt-3">Manage Appointments</a>
                 </div>
             </div>
         </div>
 
+        <!-- Profile -->
         <div class="col-md-4">
-            <div class="card text-white bg-primary mb-3">
-                <div class="card-header">My Profile</div>
+            <div class="card dashboard-card bg-coral-blue">
+                <div class="card-header bg-transparent border-0 dashboard-title">My Profile</div>
                 <div class="card-body">
-                    <h5 class="card-title">View or Edit Manager Info</h5>
-                    <p class="card-text">Logged in as Manager</p>
-                    <a asp-action="Profile" class="btn btn-light">View Profile</a>
+                    <div>
+                        <h5 class="card-title">View or Edit Info</h5>
+                        <p class="dashboard-text">Logged in as Manager</p>
+                    </div>
+                    <a asp-action="Profile" class="btn btn-outline-info mt-3">View Profile</a>
                 </div>
             </div>
         </div>
 
     </div>
 </div>
-

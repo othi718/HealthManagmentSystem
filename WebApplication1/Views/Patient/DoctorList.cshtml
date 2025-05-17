@@ -1,0 +1,37 @@
+﻿@model List<HealthManagmentSystem.Models.Doctor>
+@{
+    ViewData["Title"] = "Doctor List";
+    Layout = "LayoutPatient";
+}
+
+<div class="container mt-4">
+    <h2 class="mb-4">Available Doctors</h2>
+
+    <div class="row">
+        @if (Model != null && Model.Any())
+        {
+            foreach (var doctor in Model)
+            {
+                <div class="col-md-4 mb-4">
+                    <div class="card h-100 shadow-sm border-info">
+                        <div class="card-body">
+                            <h5 class="card-title">@doctor.Name</h5>
+                            <p class="card-text">
+                                <strong>Email:</strong> @doctor.Email
+                            </p>
+                            <a asp-controller="Patient" asp-action="MakeAppointment" asp-route-doctorId="@doctor.ID" class="btn btn-outline-primary btn-sm">
+                                Make Appointment
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            }
+        }
+        else
+        {
+            <div class="col-12">
+                <div class="alert alert-warning">No doctors available at the moment.</div>
+            </div>
+        }
+    </div>
+</div>

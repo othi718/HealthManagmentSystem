@@ -1,8 +1,9 @@
 ﻿@using HealthManagmentSystem.Models.ViewModel
 @model AdminUserViewModel
+
 @{
     ViewData["Title"] = "Manage Doctors and Patients";
-    Layout = "LayoutManager"; // Use a manager-specific layout
+    Layout = "LayoutManager"; // Change to LayoutAdmin if needed
 }
 
 <div class="container mt-4">
@@ -13,28 +14,29 @@
         </a>
     </div>
 
+    <!-- Nav Tabs -->
     <ul class="nav nav-tabs" id="userTabs" role="tablist">
         <li class="nav-item">
-            <a class="nav-link active" id="doctors-tab" data-toggle="tab" href="#doctors" role="tab">Doctors</a>
+            <a class="nav-link active" id="doctors-tab" data-bs-toggle="tab" href="#doctors" role="tab" aria-controls="doctors" aria-selected="true">Doctors</a>
         </li>
         <li class="nav-item">
-            <a class="nav-link" id="patients-tab" data-toggle="tab" href="#patients" role="tab">Patients</a>
+            <a class="nav-link" id="patients-tab" data-bs-toggle="tab" href="#patients" role="tab" aria-controls="patients" aria-selected="false">Patients</a>
         </li>
     </ul>
 
+    <!-- Tab Content -->
     <div class="tab-content p-3 border border-top-0 rounded-bottom" id="userTabsContent">
         <!-- Doctors Tab -->
-        <div class="tab-pane fade show active" id="doctors" role="tabpanel">
-            @if (Model.Doctors.Any())
+        <div class="tab-pane fade show active" id="doctors" role="tabpanel" aria-labelledby="doctors-tab">
+            @if (Model.Doctors != null && Model.Doctors.Any())
             {
                 <table class="table table-hover">
-                    <thead class="thead-light">
+                    <thead class="table-light">
                         <tr>
                             <th>ID</th>
                             <th>Name</th>
                             <th>Email</th>
-                        
-                            <th class="text-right">Actions</th>
+                            <th class="text-end">Actions</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -44,9 +46,9 @@
                                 <td>@doctor.ID</td>
                                 <td>@doctor.Name</td>
                                 <td>@doctor.Email</td>
-                                <td class="text-right">
+                                <td class="text-end">
                                     <div class="d-inline-flex">
-                                        <a asp-action="EditUser" asp-route-id="@doctor.ID" asp-route-role="Doctor" class="btn btn-sm btn-outline-secondary mr-1">
+                                        <a asp-action="EditUser" asp-route-id="@doctor.ID" asp-route-role="Doctor" class="btn btn-sm btn-outline-secondary me-1">
                                             <i class="fas fa-edit"></i> Edit
                                         </a>
                                         <form asp-action="DeleteUser" method="post" onsubmit="return confirm('Are you sure you want to delete this doctor?');">
@@ -65,22 +67,21 @@
             }
             else
             {
-                <div class="alert alert-info">No doctors found</div>
+                <div class="alert alert-info">No doctors found.</div>
             }
         </div>
 
         <!-- Patients Tab -->
-        <div class="tab-pane fade" id="patients" role="tabpanel">
-            @if (Model.Patients.Any())
+        <div class="tab-pane fade" id="patients" role="tabpanel" aria-labelledby="patients-tab">
+            @if (Model.Patients != null && Model.Patients.Any())
             {
                 <table class="table table-hover">
-                    <thead class="thead-light">
+                    <thead class="table-light">
                         <tr>
                             <th>ID</th>
                             <th>Name</th>
                             <th>Email</th>
-                          
-                            <th class="text-right">Actions</th>
+                            <th class="text-end">Actions</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -90,9 +91,9 @@
                                 <td>@patient.ID</td>
                                 <td>@patient.Name</td>
                                 <td>@patient.Email</td>
-                                <td class="text-right">
+                                <td class="text-end">
                                     <div class="d-inline-flex">
-                                        <a asp-action="EditUser" asp-route-id="@patient.ID" asp-route-role="Patient" class="btn btn-sm btn-outline-secondary mr-1">
+                                        <a asp-action="EditUser" asp-route-id="@patient.ID" asp-route-role="Patient" class="btn btn-sm btn-outline-secondary me-1">
                                             <i class="fas fa-edit"></i> Edit
                                         </a>
                                         <form asp-action="DeleteUser" method="post" onsubmit="return confirm('Are you sure you want to delete this patient?');">
@@ -111,7 +112,7 @@
             }
             else
             {
-                <div class="alert alert-info">No patients found</div>
+                <div class="alert alert-info">No patients found.</div>
             }
         </div>
     </div>
@@ -119,19 +120,24 @@
 
 @section Scripts {
     <script>
-        $(function () {
-            $('#userTabs a').on('click', function (e) {
-                e.preventDefault();
-                $(this).tab('show');
+        document.addEventListener("DOMContentLoaded", function () {
+            // Bootstrap 5 tab handling
+            const triggerTabList = [].slice.call(document.querySelectorAll('#userTabs a'));
+            triggerTabList.forEach(function (triggerEl) {
+                const tabTrigger = new bootstrap.Tab(triggerEl);
+                triggerEl.addEventListener('click', function (e) {
+                    e.preventDefault();
+                    tabTrigger.show();
+                });
             });
 
+            // Show tab from hash if available (e.g., #patients)
             if (location.hash) {
-                $('a[href="' + location.hash + '"]').tab('show');
+                const triggerEl = document.querySelector('#userTabs a[href="' + location.hash + '"]');
+                if (triggerEl) {
+                    new bootstrap.Tab(triggerEl).show();
+                }
             }
-
-            $('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
-                history.pushState(null, null, e.target.hash);
-            });
         });
     </script>
 }
