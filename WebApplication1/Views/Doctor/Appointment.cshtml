@@ -1,0 +1,45 @@
+﻿@model IEnumerable<HealthManagmentSystem.Models.Appointment>
+
+@{
+    ViewData["Title"] = "My Appointments";
+    Layout = "LayoutDoctor";
+}
+
+<div class="container mt-5">
+    <h2 class="text-center mb-4">My Appointments</h2>
+
+    @if (!Model.Any())
+    {
+        <div class="alert alert-info text-center">You have no upcoming appointments.</div>
+    }
+    else
+    {
+        <table class="table table-bordered table-striped shadow-sm">
+            <thead class="table-dark">
+                <tr>
+                    <th>Patient Name</th>
+                    <th>Date</th>
+                    <th>Reason</th>
+                    <th>Status</th>
+                    <th>Medical Record</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var appointment in Model)
+                {
+                    <tr>
+                        <td>@appointment.Patient?.Name</td>
+                        <td>@appointment.AppointmentDate.ToString("dd MMM yyyy")</td>
+                        <td>@appointment.Reason</td>
+                        <td>@appointment.Status</td>
+                        <td>
+                            <a asp-controller="Doctor" asp-action="MedicalRecords" asp-route-id="@appointment.PatientId" class="btn btn-sm btn-outline-primary">
+                                View Medical Record
+                            </a>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    }
+</div>

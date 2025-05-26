@@ -34,18 +34,7 @@ namespace HealthManagmentSystem.Controllers
         }
 
         // ✅ View Medical Records
-        public async Task<IActionResult> MedicalRecords()
-        {
-            decimal patientId = GetLoggedInPatientId();
-
-            var records = await _context.MedicalRecord
-                .Include(r => r.Doctor)
-                .Where(r => r.PatientId == patientId)
-                .ToListAsync();
-
-            return View(records); // Make sure Views/Patient/MedicalRecords.cshtml exists
-        }
-
+       
         // ✅ Appointment Dashboard (booking + history)
         public async Task<IActionResult> Appointment()
         {
@@ -75,6 +64,38 @@ namespace HealthManagmentSystem.Controllers
 
             return View(model); // Views/Patient/Appointment.cshtml
         }
+        public async Task<IActionResult> Profile()
+        {
+            decimal patientId = GetLoggedInPatientId();
+
+            var patient = await _context.Patient
+                .FirstOrDefaultAsync(p => p.ID == patientId);
+
+            if (patient == null)
+            {
+                return NotFound(); // Handle the case where the patient is not found
+            }
+
+            var appointments = await _context.Appointment
+                .Include(a => a.Doctor)
+                .Where(a => a.PatientId == patientId)
+                .ToListAsync();
+
+            var records = await _context.MedicalRecord
+                .Include(r => r.Doctor)
+                .Where(r => r.PatientId == patientId)
+                .ToListAsync();
+
+            var model = new PatientProfileViewModel
+            {
+                Patient = patient,
+                Appointments = appointments,
+                MedicalRecords = records
+            };
+
+            return View(model); // Views/Patient/Profile.cshtml
+        }
+
 
         // ✅ Make appointment
         [HttpPost]
@@ -89,7 +110,7 @@ namespace HealthManagmentSystem.Controllers
                 _context.Appointment.Add(appointment);
                 await _context.SaveChangesAsync();
 
-                return RedirectToAction("Appointment");
+                return RedirectToAction("Profile");
             }
 
             decimal patientId = GetLoggedInPatientId();
@@ -130,7 +151,7 @@ namespace HealthManagmentSystem.Controllers
                 await _context.SaveChangesAsync();
             }
 
-            return RedirectToAction("Appointment");
+            return RedirectToAction("Profile");
         }
 
         // Simulated logged-in patient ID
@@ -138,5 +159,7 @@ namespace HealthManagmentSystem.Controllers
         {
             return 1; // Replace with real user ID from login/session
         }
+      
+
     }
 }

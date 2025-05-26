@@ -1,0 +1,68 @@
+﻿@model HealthManagmentSystem.Models.ViewModel.PatientProfileViewModel
+@{
+    ViewData["Title"] = "Doctor List";
+    Layout = "LayoutPatient";
+}
+<div class="container mt-4">
+    <h2>Welcome, @Model.Patient.Name!</h2>
+    <p><strong>Email:</strong> @Model.Patient.Email</p>
+
+    <hr />
+
+    <h4>Your Appointments</h4>
+    <table class="table table-bordered">
+        <thead>
+            <tr>
+                <th>Date</th>
+                <th>Doctor</th>
+                <th>Reason</th>
+                <th>Status</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var appt in Model.Appointments)
+            {
+                <tr>
+                    <td>@appt.AppointmentDate.ToString("g")</td>
+                    <td>@appt.Doctor?.Name</td>
+                    <td>@appt.Reason</td>
+                    <td>@appt.Status</td>
+                </tr>
+            }
+            @foreach (var appt in Model.Appointments)
+            {
+                <tr>
+                    <td>@appt.AppointmentDate.ToString("g")</td>
+                    <td>@appt.Doctor?.Name</td>
+                    <td>@appt.Reason</td>
+                    <td>@appt.Status</td>
+                    <td>
+                        @if (appt.Status == "Scheduled")
+                        {
+                            <form asp-action="CancelAppointment" asp-route-id="@appt.AppointmentId" method="post" style="display:inline;">
+                                <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('Are you sure you want to cancel this appointment?');">
+                                    Cancel
+                                </button>
+                            </form>
+                        }
+                        else
+                        {
+                            <span class="text-muted">N/A</span>
+                        }
+                    </td>
+                </tr>
+            }
+
+        </tbody>
+    </table>
+
+    <hr />
+
+    <h4>Medical Records</h4>
+    <ul>
+        @foreach (var record in Model.MedicalRecords)
+        {
+            <li><strong>@record.ReportDate.ToShortDateString()</strong>: @record.Diagnosis</li>
+        }
+    </ul>
+</div>

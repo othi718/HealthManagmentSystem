@@ -14,6 +14,7 @@ namespace HealthManagmentSystem.Models
 
         [Required]
         public string? PasswordHash { get; set; }
+       // public string MedicalRecords { get; set; } = string.Empty;
         public string Role { get; set; } = "Patient"; // Default value
 
     }
